@@ -1,0 +1,5 @@
+bucket-name.txt
+venv
+.env
+package
+out.*
