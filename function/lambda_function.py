@@ -1,6 +1,7 @@
 import os
 import logging
 import jsonpickle
+import json
 import boto3
 from aws_xray_sdk.core import patch_all
 import os
@@ -26,10 +27,14 @@ client = boto3.client('lambda')
 client.get_account_settings()
 
 def write_graph_record(tx, event):
-    val = jsonpickle.encode(event)
+    json_messages = [json.loads(msg['body']) for msg in event['Records']]
+
     tx.run("""
-        MERGE (e:LambdaEvent { created: datetime(), event: $event })       
-    """, event=jsonpickle.encode(event))
+        UNWIND $json_messages AS message
+        MERGE (p:Person { name: message.name })
+        MERGE (h:Hobby { name: message.hobby })
+        MERGE (p)-[:HAS]->(h)
+    """, json_messages=json_messages)
 
 def lambda_handler(event, context):
     logger.info('## ENVIRONMENT VARIABLES\r' + jsonpickle.encode(dict(**os.environ)))
