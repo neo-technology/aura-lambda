@@ -53,6 +53,21 @@ Successfully created/updated stack - aura-lambda
 
 This will in a loop, every 2 seconds, submit the sample event (`event.json`) to the lambda function.
 
+This is what successful output looks like:
+
+```
+$ ./3-invoke.sh 
+{
+    "StatusCode": 200,
+    "ExecutedVersion": "$LATEST"
+}
+{"TotalCodeSize": 9970732198, "FunctionCount": 90}
+{
+    "StatusCode": 200,
+    "ExecutedVersion": "$LATEST"
+}
+```
+
 If all goes well, you will start to see records appear in your Neo4j Aura instance!
 
 ### Cleanup

@@ -2,7 +2,6 @@ import os
 import logging
 import jsonpickle
 import boto3
-from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.core import patch_all
 import os
 from neo4j import GraphDatabase
@@ -18,8 +17,6 @@ patch_all()
 if neo4j_uri is None or neo4j_user is None or neo4j_password is None:
     logger.info('## ENVIRONMENT VARIABLES\r' + jsonpickle.encode(dict(**os.environ)))
     raise Exception("Missing environment variables for connecting to Aura; double check!")
-else:
-    logger.info("CONNECTING TO %s/%s" % (neo4j_uri, neo4j_user))
 
 driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password),
     max_connection_lifetime=5*60,
