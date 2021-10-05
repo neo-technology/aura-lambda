@@ -32,8 +32,10 @@ def write_graph_record(tx, event):
     tx.run("""
         UNWIND $json_messages AS message
         MERGE (p:Person { name: message.name })
-        MERGE (h:Hobby { name: message.hobby })
-        MERGE (p)-[:HAS]->(h)
+        MERGE (c:Company { name: message.company })
+        MERGE (co:Country { name: message.country })
+        MERGE (p)-[:WORKS_FOR]->(c)
+        MERGE (c)-[:IN]->(co);
     """, json_messages=json_messages)
 
 def lambda_handler(event, context):
